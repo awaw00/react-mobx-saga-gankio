@@ -1,4 +1,4 @@
-import { RequestType } from './interfaces';
+import { RequestType } from './types';
 
 export function getRequestType (baseType: string): RequestType {
   return {

@@ -1,4 +1,4 @@
-import { ApiTypeConfig, RequestType } from './interfaces';
+import { ApiTypeConfig, RequestType } from './types';
 
 export function apiType (requestType: RequestType, config: ApiTypeConfig = {}): MethodDecorator {
   return function (target: any, key: string, descriptor: any) {

@@ -1,4 +1,4 @@
-import { ActionWithPayload } from './interfaces';
+import { ActionWithPayload } from './types';
 import { runSaga, END } from 'redux-saga';
 
 type Callback = (cb: (ActionWithPayload | END)) => void;

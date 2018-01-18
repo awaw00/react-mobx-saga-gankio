@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import { ActionWithPayload, RequestType, ApiTypeConfig } from './interfaces';
+import { ActionWithPayload, RequestType, ApiTypeConfig } from './types';
 import { put, takeLatest, call } from 'redux-saga/effects';
 import SagaRunner from './SagaRunner';
 
