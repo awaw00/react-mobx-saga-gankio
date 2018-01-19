@@ -5,9 +5,8 @@ export interface RequestType {
   FAILURE: string;
 }
 
-export interface ApiTypeConfig {
+export interface ApiCallWithConfig {
   requestType?: RequestType;
-  receiverKey?: string;
 }
 
 export interface ActionWithPayload {

@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import { ActionWithPayload, RequestType, ApiTypeConfig } from './types';
+import { ActionWithPayload, RequestType, ApiCallWithConfig } from './types';
 import { put, takeLatest, call } from 'redux-saga/effects';
 import SagaRunner from './SagaRunner';
 
@@ -13,7 +13,7 @@ export default class BaseStore {
   static sagaRunner: SagaRunner;
   static http: AxiosInstance;
 
-  http: AxiosInstance = BaseStore.http;
+  http: AxiosInstance;
   axios = axios;
 
   static init (baseStoreConfig?: BaseStoreConfig) {
@@ -26,6 +26,7 @@ export default class BaseStore {
     if (!BaseStore.initialized) {
       BaseStore.init();
     }
+    this.http = BaseStore.http;
 
     BaseStore.sagaRunner.registerStore(key, this);
     this.processDecoratedMethods();
@@ -50,21 +51,21 @@ export default class BaseStore {
     );
 
     funcNameList.forEach(i => {
+      const $apiCallWith = this[i].$apiCallWith;
       if (this[i].$bind) {
         this[i] = this[i].bind(this);
       }
-      if (this[i].$apiType) {
-        this.runCallWithSaga(i);
+      if ($apiCallWith) {
+        this.runCallWithSaga(i, $apiCallWith);
       }
     });
   }
 
-  private runCallWithSaga (funcName: string) {
+  private runCallWithSaga (funcName: string, apiCallWithConfig: ApiCallWithConfig) {
     const self = this;
     const func = self[funcName];
 
-    const apiTypeConfig = func.$apiType as ApiTypeConfig;
-    const {requestType, receiverKey} = apiTypeConfig;
+    const {requestType} = apiCallWithConfig;
 
     if (requestType) {
       this.runSaga(function * () {
@@ -72,12 +73,9 @@ export default class BaseStore {
           try {
             const data = yield call(func, payload);
             yield put({type: requestType.SUCCESS, payload: {data}});
-
-            if (receiverKey) {
-              self[receiverKey] = data;
-            }
           } catch (err) {
             yield put({type: requestType.FAILURE, payload: {err}});
+            console.error(err);
           }
         });
       });

@@ -1,6 +1,6 @@
-import { ApiTypeConfig, RequestType } from './types';
+import { ApiCallWithConfig, RequestType } from './types';
 
-export function apiType (requestType: RequestType, config: ApiTypeConfig = {}): MethodDecorator {
+export function apiCallWith (requestType: RequestType, config: ApiCallWithConfig = {}): MethodDecorator {
   return function (target: any, key: string, descriptor: any) {
     config.requestType = requestType;
     descriptor.value.$apiType = config;
