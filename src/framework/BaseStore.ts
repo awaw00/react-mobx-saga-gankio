@@ -22,7 +22,7 @@ export default class BaseStore {
     BaseStore.initialized = true;
   }
 
-  constructor (protected key: string) {
+  constructor (public key: string) {
     if (!BaseStore.initialized) {
       BaseStore.init();
     }
