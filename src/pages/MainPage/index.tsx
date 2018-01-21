@@ -23,6 +23,7 @@ export default class MainPage extends React.Component<Props, {}> {
       <div>
 
         <DrawerMenu
+          title="Gank 干货集中营"
           show={gank.showMenu}
           menuItems={menuItems}
           currentMenuKey={gank.currentType}

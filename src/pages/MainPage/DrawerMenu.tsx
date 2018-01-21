@@ -7,6 +7,7 @@ interface MenuItem<T> {
 }
 
 interface Props<T = any> {
+  title: string;
   show: boolean;
   menuItems: MenuItem<T>[];
   currentMenuKey: T;
@@ -23,6 +24,12 @@ const Wrapper = styled<{show: boolean}, 'div'>('div')`
   pointer-events: ${props => !props.show && 'none'};
 `;
 
+const Title = styled('h1')`
+  color: #fff;
+  font-size: 20px;
+  padding: 0 12px;
+`;
+
 const DrawerMask = styled<{show: boolean}, 'div'>('div')`
   position: absolute;
   top: 0;
@@ -32,7 +39,7 @@ const DrawerMask = styled<{show: boolean}, 'div'>('div')`
   background-color: #222222;
   transition: opacity .2s ease-out;
   z-index: 1000;
-  opacity: ${props => props.show ? '.3' : '0'};
+  opacity: ${props => props.show ? '.5' : '0'};
 `;
 
 const DrawerBody = styled<{show: boolean}, 'div'>('div')`
@@ -42,7 +49,7 @@ const DrawerBody = styled<{show: boolean}, 'div'>('div')`
   bottom: 0;
   width: 200px;
   background-color: #0094ff;
-  transition: transform .3s ease-out;
+  transition: transform .1s ease-out;
   transform: translateX(${(props) => props.show ? '0' : '-100%'});
   z-index: 1001;
 `;
@@ -63,10 +70,12 @@ const DrawerItem = styled<{active?: boolean}, 'li'>('li')`
 
 export default class DrawerMenu extends React.Component<Props, {}> {
   render () {
-    const {show, currentMenuKey, menuItems, onClose, onMenuClick} = this.props;
+    const {title, show, currentMenuKey, menuItems, onClose, onMenuClick} = this.props;
     return (
       <Wrapper show={show}>
         <DrawerBody show={show}>
+          <Title>{title}</Title>
+
           <DrawerList>
             {menuItems.map(i => {
               const {key, text} = i;
