@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import { ActionWithPayload, RequestType, ApiCallWithConfig } from './types';
+import { ActionWithPayload, ApiCallWithConfig } from './types';
 import { put, takeLatest, call } from 'redux-saga/effects';
 import SagaRunner from './SagaRunner';
 
@@ -14,7 +14,6 @@ export default class BaseStore {
   static http: AxiosInstance;
 
   http: AxiosInstance;
-  axios = axios;
 
   static init (baseStoreConfig?: BaseStoreConfig) {
     BaseStore.http = axios.create(baseStoreConfig && baseStoreConfig.axiosConfig);
@@ -32,12 +31,12 @@ export default class BaseStore {
     this.processDecoratedMethods();
   }
 
-  dispatch (action: ActionWithPayload): void {
-    BaseStore.sagaRunner.dispatch(action);
+  dispatch (action: ActionWithPayload) {
+    return BaseStore.sagaRunner.dispatch(action);
   }
 
   runSaga (saga: () => Iterator<any>) {
-    BaseStore.sagaRunner.runSaga(saga);
+    return BaseStore.sagaRunner.runSaga(saga);
   }
 
   private processDecoratedMethods () {
@@ -72,7 +71,7 @@ export default class BaseStore {
         yield takeLatest(requestType.REQUEST, function * ({payload}: ActionWithPayload) {
           try {
             const data = yield call(func, payload);
-            yield put({type: requestType.SUCCESS, payload: {data}});
+            yield put({type: requestType.SUCCESS, payload: data});
           } catch (err) {
             yield put({type: requestType.FAILURE, payload: {err}});
             console.error(err);

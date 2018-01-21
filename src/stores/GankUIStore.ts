@@ -1,5 +1,5 @@
 import { computed, observable, action } from 'mobx';
-import { BaseStore } from '../framework';
+import { BaseStore, bind } from '../framework';
 import GankStore from './GankStore';
 import { GankType } from '../constants';
 import { GankDataCache } from '../types';
@@ -18,7 +18,7 @@ export default class GankUIStore extends BaseStore {
       dataCache = this.gankStore.dataCache.get(this.currentType);
     }
     if (!dataCache) {
-      dataCache = {loading: false, data: [], currentPage: 0};
+      dataCache = {data: [], currentPage: 0};
     }
 
     return dataCache;
@@ -31,21 +31,24 @@ export default class GankUIStore extends BaseStore {
 
   @computed
   get loading () {
-    return this.dataCache.loading;
+    return this.gankStore ? this.gankStore.dataCacheLoading : false;
   }
 
   @action('切换干货类型')
   switchGankType (type: GankType) {
-    const dataCache = this.gankStore.dataCache.get(this.currentType);
-    if (dataCache && dataCache.loading) {
-      dataCache.loading = false;
-    }
-
     if (this.showMenu) {
       this.showMenu = false;
     }
 
     this.currentType = type;
+  }
+
+  @bind
+  loadNextPage () {
+    return this.dispatch({
+      type: GankStore.GANK_GET_NEXT_PAGE_DATA_OF_TYPE.PRE_REQUEST,
+      payload: {type: this.currentType}
+    });
   }
 
   @action('切换菜单展示或隐藏')

@@ -9,7 +9,7 @@ export interface ApiCallWithConfig {
   requestType?: RequestType;
 }
 
-export interface ActionWithPayload {
+export interface ActionWithPayload<T = any> {
   type: string;
-  payload?: {[name: string]: any};
+  payload?: T;
 }

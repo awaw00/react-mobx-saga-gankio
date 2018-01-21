@@ -1,11 +1,4 @@
-import { BaseStore } from './framework';
 import DevTools from 'mobx-react-devtools';
-
-BaseStore.init({
-  axiosConfig: {
-    baseURL: 'http://gank.io/api/'
-  }
-});
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';

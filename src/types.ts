@@ -3,7 +3,6 @@ import { GankType } from './constants';
 export interface GankDataCache {
   data: GankDataItem[];
   currentPage: number;
-  loading: boolean;
 }
 
 export interface GankApiResponse<T> {

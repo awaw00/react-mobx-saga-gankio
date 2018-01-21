@@ -19,6 +19,8 @@ class SagaRunner {
     for (let i = 0, len =  arr.length; i < len; i++) {
       arr[i](action);
     }
+
+    return action;
   }
   
   runSaga (saga: () => Iterator<any>) {

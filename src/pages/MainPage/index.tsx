@@ -31,7 +31,14 @@ export default class MainPage extends React.Component<Props, {}> {
           onClose={() => gank.switchMenuShow(false)}
         />
 
+        <ul>
+          {gank.data.map(i => {
+            return <li key={i._id}>{i.desc}</li>;
+          })}
+        </ul>
+
         <button onClick={() => gank.switchMenuShow(!gank.showMenu)}>Switch Menu</button>
+        <button onClick={gank.loadNextPage}>Load Next Page</button>
       </div>
     );
   }
