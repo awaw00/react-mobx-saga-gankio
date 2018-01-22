@@ -26,6 +26,7 @@
     "@types/react": "^16.0.34",
     "@types/react-dom": "^16.0.3",
     "@types/redux": "^3.6.0",
-    "mobx-react-devtools": "^4.2.15"
+    "mobx-react-devtools": "^4.2.15",
+    "redux-saga-test-plan": "^3.3.1"
   }
 }

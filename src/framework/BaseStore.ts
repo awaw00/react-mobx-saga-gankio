@@ -21,6 +21,12 @@ export default class BaseStore {
     BaseStore.initialized = true;
   }
 
+  static reset () {
+    BaseStore.http = void 0;
+    BaseStore.sagaRunner = void 0;
+    BaseStore.initialized = false;
+  }
+
   constructor (public key: string) {
     if (!BaseStore.initialized) {
       BaseStore.init();
@@ -73,7 +79,7 @@ export default class BaseStore {
             const data = yield call(func, payload);
             yield put({type: requestType.SUCCESS, payload: data});
           } catch (err) {
-            yield put({type: requestType.FAILURE, payload: {err}});
+            yield put({type: requestType.FAILURE, payload: err});
             console.error(err);
           }
         });
