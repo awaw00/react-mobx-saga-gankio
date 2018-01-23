@@ -13,6 +13,7 @@ export default class BaseStore {
   static sagaRunner: SagaRunner;
   static http: AxiosInstance;
 
+  sagaRunner: SagaRunner;
   http: AxiosInstance;
 
   static init (baseStoreConfig?: BaseStoreConfig) {
@@ -32,17 +33,22 @@ export default class BaseStore {
       BaseStore.init();
     }
     this.http = BaseStore.http;
+    this.sagaRunner = BaseStore.sagaRunner;
 
-    BaseStore.sagaRunner.registerStore(key, this);
+    this.sagaRunner.registerStore(key, this);
+
+    this.dispatch = this.dispatch.bind(this);
+    this.runSaga = this.runSaga.bind(this);
+
     this.processDecoratedMethods();
   }
 
   dispatch (action: ActionWithPayload) {
-    return BaseStore.sagaRunner.dispatch(action);
+    return this.sagaRunner.dispatch(action);
   }
 
   runSaga (saga: () => Iterator<any>) {
-    return BaseStore.sagaRunner.runSaga(saga);
+    return this.sagaRunner.runSaga(saga);
   }
 
   private processDecoratedMethods () {
