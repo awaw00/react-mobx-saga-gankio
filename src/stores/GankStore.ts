@@ -2,11 +2,12 @@ import { observable, runInAction, ObservableMap } from 'mobx';
 import { put, call, take, takeLatest } from 'redux-saga/effects';
 import { GankType } from '../constants';
 import { GankDataCache, GankApiResponse, GankDataItem } from '../types';
-import { BaseStore, getRequestType, bind, apiCallWith } from '../framework';
+import { BaseStore, typeDef, apiTypeDef, bind, apiCallWith } from '../framework';
+import { ApiCallType } from '../framework/types';
 import { ActionWithPayload } from '../framework/types';
 
 export default class GankStore extends BaseStore {
-  static readonly GANK_GET_NEXT_PAGE_DATA_OF_TYPE = getRequestType('GANK_GET_NEXT_PAGE_DATA_OF_TYPE');
+  @apiTypeDef static readonly GANK_GET_NEXT_PAGE_DATA_OF_TYPE: ApiCallType;
 
   dataCache: ObservableMap<GankDataCache> = observable.map({});
 
@@ -53,7 +54,7 @@ export default class GankStore extends BaseStore {
     });
   }
 
-  @apiCallWith(GankStore.GANK_GET_NEXT_PAGE_DATA_OF_TYPE)
+  @apiCallWith('GANK_GET_NEXT_PAGE_DATA_OF_TYPE')
   getPageDataOfType ({type, page}: {type: GankType, page: number}) {
     return this.http.get(`/data/${type}/10/${page}`)
       .then(res => res.data as GankApiResponse<GankDataItem[]>);

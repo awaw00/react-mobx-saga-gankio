@@ -1,6 +1,7 @@
-import { BaseStore, apiCallWith, bind, getRequestType } from '../framework';
+import { BaseStore, apiCallWith, bind, getApiCallType, typeDef, apiTypeDef } from '../framework';
 import { delay } from 'redux-saga';
 import { put, take, call, race, all } from 'redux-saga/effects';
+import { ApiCallType } from '../framework/types';
 
 describe('BaseStore test', () => {
 
@@ -20,6 +21,7 @@ describe('BaseStore test', () => {
 
   test('bind member function', () => {
     class BindTest extends BaseStore {
+      @apiTypeDef static readonly API_TYPE: ApiCallType;
       constructor (public key: string) {
         super(key);
       }
@@ -29,7 +31,7 @@ describe('BaseStore test', () => {
         return this;
       }
 
-      @apiCallWith({REQUEST: 'REQUEST', SUCCESS: 'SUCCESS', FAILURE: 'FAILURE'})
+      @apiCallWith('API_TYPE')
       funcApiCallWith () {
         return this;
       }
@@ -55,19 +57,19 @@ describe('BaseStore test', () => {
 
   test('apiCallWith', () => {
     class ApiCallWithTest extends BaseStore {
-      static readonly API_WILL_SUCCESS = getRequestType('API_WILL_SUCCESS');
-      static readonly API_WILL_FAILURE = getRequestType('API_WILL_FAILURE');
+      @apiTypeDef static readonly API_WILL_SUCCESS: ApiCallType;
+      @apiTypeDef static readonly API_WILL_FAILURE: ApiCallType;
 
       constructor (public key: string) {
         super(key);
       }
 
-      @apiCallWith(ApiCallWithTest.API_WILL_SUCCESS)
+      @apiCallWith('API_WILL_SUCCESS')
       successApi (params: any) {
         return Promise.resolve(params);
       }
 
-      @apiCallWith(ApiCallWithTest.API_WILL_FAILURE)
+      @apiCallWith('API_WILL_FAILURE')
       failureApi (params: any) {
         return Promise.reject('failure');
       }

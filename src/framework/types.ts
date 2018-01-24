@@ -1,4 +1,4 @@
-export interface RequestType {
+export interface ApiCallType {
   PRE_REQUEST?: string;
   REQUEST: string;
   SUCCESS: string;
@@ -6,7 +6,7 @@ export interface RequestType {
 }
 
 export interface ApiCallWithConfig {
-  requestType?: RequestType;
+  apiCallTypeName?: string;
 }
 
 export interface ActionWithPayload<T = any> {
