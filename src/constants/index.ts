@@ -1,7 +1,7 @@
 export enum GankType {
   All = 'all',
   Android = 'Android',
-  IOS = 'IOS',
+  IOS = 'iOS',
   EasyVideo = '休息视频',
   Welfare = '福利',
   ExpandResource = '拓展资源',
