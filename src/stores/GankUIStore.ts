@@ -45,10 +45,7 @@ export default class GankUIStore extends BaseStore {
 
   @bind
   loadNextPage () {
-    return this.dispatch({
-      type: GankStore.GANK_GET_NEXT_PAGE_DATA_OF_TYPE.PRE_REQUEST,
-      payload: {type: this.currentType}
-    });
+    return this.gankStore.loadNextPageOfType(this.currentType);
   }
 
   @action('切换菜单展示或隐藏')

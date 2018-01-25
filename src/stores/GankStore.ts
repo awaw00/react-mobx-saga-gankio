@@ -7,7 +7,7 @@ import { ApiCallType } from '../framework/types';
 import { ActionWithPayload } from '../framework/types';
 
 export default class GankStore extends BaseStore {
-  @apiTypeDef static readonly GANK_GET_NEXT_PAGE_DATA_OF_TYPE: ApiCallType;
+  @apiTypeDef static readonly GET_NEXT_PAGE_DATA_OF_TYPE: ApiCallType;
 
   dataCache: ObservableMap<GankDataCache> = observable.map({});
 
@@ -21,14 +21,12 @@ export default class GankStore extends BaseStore {
 
   @bind
   *sagaMain () {
-    yield takeLatest(GankStore.GANK_GET_NEXT_PAGE_DATA_OF_TYPE.PRE_REQUEST, this.handleGetPageDataOfTypePreRequest);
+    yield takeLatest(GankStore.GET_NEXT_PAGE_DATA_OF_TYPE.PRE_REQUEST, this.handleGetPageDataOfTypePreRequest);
   }
 
   @bind
   *handleGetPageDataOfTypePreRequest ({payload}: ActionWithPayload<{type: GankType}>) {
-    const self = yield this;
-    self.dataCacheLoading = false;
-
+    const self: GankStore = yield this;
     const {type} = payload;
 
     yield call<any>(runInAction, () => {
@@ -41,9 +39,9 @@ export default class GankStore extends BaseStore {
     const cache = self.dataCache.get(type);
     const nextPage = cache.currentPage + 1;
 
-    yield put({type: GankStore.GANK_GET_NEXT_PAGE_DATA_OF_TYPE.REQUEST, payload: {type, page: nextPage}});
+    yield put({type: GankStore.GET_NEXT_PAGE_DATA_OF_TYPE.REQUEST, payload: {type, page: nextPage}});
 
-    const sagaAction = yield take(GankStore.GANK_GET_NEXT_PAGE_DATA_OF_TYPE.SUCCESS);
+    const sagaAction = yield take(GankStore.GET_NEXT_PAGE_DATA_OF_TYPE.SUCCESS);
     const res = sagaAction.payload as GankApiResponse<GankDataItem[]>;
 
     yield call<any>(runInAction, () => {
@@ -54,9 +52,13 @@ export default class GankStore extends BaseStore {
     });
   }
 
-  @apiCallWith('GANK_GET_NEXT_PAGE_DATA_OF_TYPE')
-  getPageDataOfType ({type, page}: {type: GankType, page: number}) {
+  @apiCallWith('GET_NEXT_PAGE_DATA_OF_TYPE')
+  apiGetPageDataOfType ({type, page}: {type: GankType, page: number}) {
     return this.http.get(`/data/${type}/10/${page}`)
       .then(res => res.data as GankApiResponse<GankDataItem[]>);
+  }
+
+  loadNextPageOfType (type: GankType) {
+    this.dispatch({type: GankStore.GET_NEXT_PAGE_DATA_OF_TYPE.PRE_REQUEST, payload: {type}});
   }
 }
