@@ -7,7 +7,10 @@ import registerServiceWorker from './registerServiceWorker';
 import './index.css';
 
 ReactDOM.render(
-  [<App key="app"/>, <DevTools key="dev-tool"/>],
+  [
+    <App key="app"/>,
+    // <DevTools key="dev-tool"/>
+  ],
   document.getElementById('root') as HTMLElement
 );
 registerServiceWorker();

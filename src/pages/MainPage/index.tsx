@@ -3,6 +3,8 @@ import { inject, observer } from 'mobx-react';
 import GankUIStore from '../../stores/GankUIStore';
 import { GankType } from '../../constants';
 import DrawerMenu from './DrawerMenu';
+import Header from './Header';
+import Content from './Content';
 
 interface Props {
   gank?: GankUIStore;
@@ -22,6 +24,8 @@ export default class MainPage extends React.Component<Props, {}> {
     return (
       <div>
 
+        <Header currentType={gank.currentType} onShowMenuClick={() => gank.switchMenuShow(true)}/>
+
         <DrawerMenu
           title="Gank 干货集中营"
           show={gank.showMenu}
@@ -31,14 +35,8 @@ export default class MainPage extends React.Component<Props, {}> {
           onClose={() => gank.switchMenuShow(false)}
         />
 
-        <ul>
-          {gank.data.map(i => {
-            return <li key={i._id}>{i.desc}</li>;
-          })}
-        </ul>
+        <Content currentType={gank.currentType} data={gank.data} onLoadMore={gank.loadNextPage} loading={gank.loading}/>
 
-        <button onClick={() => gank.switchMenuShow(!gank.showMenu)}>Switch Menu</button>
-        <button onClick={gank.loadNextPage}>Load Next Page</button>
       </div>
     );
   }

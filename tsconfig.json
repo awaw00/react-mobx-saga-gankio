@@ -16,7 +16,11 @@
     "strictNullChecks": false,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": false,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "typeRoots": [
+      "node_modules/@types",
+      "./src/definitions"
+    ]
   },
   "exclude": [
     "node_modules",

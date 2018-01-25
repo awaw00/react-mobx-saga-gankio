@@ -6,7 +6,7 @@ import { GankDataCache } from '../types';
 
 export default class GankUIStore extends BaseStore {
   @observable
-  showMenu: boolean = true;
+  showMenu: boolean = false;
 
   @observable
   currentType: GankType = GankType.All;
