@@ -4,9 +4,13 @@ import { put, takeLatest, call } from 'redux-saga/effects';
 import { isApiType } from './utils';
 import SagaRunner from './SagaRunner';
 
-type BaseStoreConfig = {
+type BaseStoreStaticConfig = {
   axiosConfig?: AxiosRequestConfig,
-  sagaRunnerConfig?: any
+};
+
+type BaseStoreConfig = {
+  key?: string;
+  sagaRunner?: SagaRunner;
 };
 
 export default class BaseStore {
@@ -14,10 +18,10 @@ export default class BaseStore {
   static sagaRunner: SagaRunner;
   static http: AxiosInstance;
 
-  sagaRunner: SagaRunner;
   http: AxiosInstance;
+  sagaRunner: SagaRunner;
 
-  static init (baseStoreConfig?: BaseStoreConfig) {
+  static init (baseStoreConfig?: BaseStoreStaticConfig) {
     BaseStore.http = axios.create(baseStoreConfig && baseStoreConfig.axiosConfig);
     BaseStore.sagaRunner = new SagaRunner();
     BaseStore.initialized = true;
@@ -29,14 +33,26 @@ export default class BaseStore {
     BaseStore.initialized = false;
   }
 
-  constructor (public key: string) {
+  constructor (public keyOrConfig?: string | BaseStoreConfig, baseStoreConfig?: BaseStoreConfig) {
     if (!BaseStore.initialized) {
       BaseStore.init();
     }
-    this.http = BaseStore.http;
-    this.sagaRunner = BaseStore.sagaRunner;
 
-    this.sagaRunner.registerStore(key, this);
+    if (!baseStoreConfig) {
+      baseStoreConfig = {};
+    }
+    if (typeof keyOrConfig === 'string') {
+      baseStoreConfig.key = keyOrConfig;
+    } else if (keyOrConfig) {
+      baseStoreConfig = keyOrConfig;
+    }
+
+    this.http = BaseStore.http;
+    this.sagaRunner = baseStoreConfig.sagaRunner || BaseStore.sagaRunner;
+
+    if (baseStoreConfig.key) {
+      this.sagaRunner.registerStore(baseStoreConfig.key, this);
+    }
 
     this.dispatch = this.dispatch.bind(this);
     this.runSaga = this.runSaga.bind(this);
