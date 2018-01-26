@@ -2,9 +2,11 @@
   "name": "react-mobx-saga-gankio",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://awaw00.github.io/react-mobx-saga-gankio",
   "dependencies": {
     "axios": "^0.17.1",
     "emotion": "^8.0.12",
+    "gh-pages": "^1.1.0",
     "mobx": "^3.4.1",
     "mobx-react": "^4.3.5",
     "mobx-utils": "^3.2.2",
@@ -18,7 +20,8 @@
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "eject": "react-scripts-ts eject",
+    "deploy": "gh-pages -d build"
   },
   "devDependencies": {
     "@types/jest": "^22.0.1",
