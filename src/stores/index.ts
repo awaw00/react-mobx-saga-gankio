@@ -2,7 +2,7 @@ import { BaseStore } from '../framework';
 
 BaseStore.init({
   axiosConfig: {
-    baseURL: 'http://gank.io/api/'
+    baseURL: '//gank.io/api/'
   }
 });
 
