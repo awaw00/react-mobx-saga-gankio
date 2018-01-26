@@ -21,6 +21,8 @@ const ItemWrapper = styled('div')`
 
 const WelfareImg = styled('img')`
   display: block;
+  max-width: 100%;
+  margin: 0 auto;
 `;
 
 const CommonContent = styled('div')`
@@ -43,6 +45,14 @@ const CommonTitle = styled('div')`
   flex: 1 1 auto;
 `;
 
+const Info = styled('div')`
+  font-size: 10px;
+  color: #8e8e8e;
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+`;
+
 class Item extends React.Component<ItemProps, {}> {
   render () {
     const {data} = this.props;
@@ -59,6 +69,15 @@ class Item extends React.Component<ItemProps, {}> {
               </CommonContent>
             )
         }
+
+        <Info>
+          <div>
+            {data.type} by: {data.who}
+          </div>
+          <div>
+            {data.createdAt.replace(/^(.*?)T(.*?)\.(.*)$/g, '$1 $2')}
+          </div>
+        </Info>
       </ItemWrapper>
     );
   }
