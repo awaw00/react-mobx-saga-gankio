@@ -86,7 +86,8 @@ export default class BaseStore {
 
     const {apiCallTypeName} = apiCallWithConfig;
 
-    let apiCallType = this.constructor[apiCallTypeName];
+    // try get instance type first
+    let apiCallType = this[apiCallTypeName] || this.constructor[apiCallTypeName];
 
     if (isApiType(apiCallType)) {
       this.runSaga(function * () {

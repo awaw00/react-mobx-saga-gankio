@@ -1,13 +1,13 @@
 import { ApiCallType } from './types';
 
 export function getApiCallType (baseType: string, namespace?: string, key?: string): ApiCallType {
+  const slicer = '/';
+
   if (namespace) {
-    namespace += (key ? `[${key}]` : '') + '/';
+    namespace += (key ? `<${key}>` : '') + slicer;
   } else {
     namespace = '';
   }
-
-  const slicer = '|';
 
   return {
     PRE_REQUEST: `${namespace}${baseType}${slicer}PRE_REQUEST`,
