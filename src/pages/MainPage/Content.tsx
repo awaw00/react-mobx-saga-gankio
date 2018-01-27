@@ -53,7 +53,7 @@ const Info = styled('div')`
   justify-content: space-between;
 `;
 
-class Item extends React.Component<ItemProps, {}> {
+class Item extends React.PureComponent<ItemProps, {}> {
   render () {
     const {data} = this.props;
     return (
@@ -94,7 +94,7 @@ const ContentWrapper = styled('div')`
   padding: 34px 10px 10px 10px;
 `;
 
-export default class Content extends React.Component<Props, {}> {
+export default class Content extends React.PureComponent<Props, {}> {
   render () {
     const {currentType, data, onLoadMore, loading} = this.props;
     return (

@@ -36,7 +36,7 @@ const HeaderWrapper = styled<any, 'div'>('div')`
   }
 `;
 
-class Header extends React.Component<Props, {}> {
+class Header extends React.PureComponent<Props, {}> {
   render () {
     const {currentType, onShowMenuClick} = this.props;
     return (

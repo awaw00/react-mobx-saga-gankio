@@ -68,7 +68,7 @@ const DrawerItem = styled<{active?: boolean}, 'li'>('li')`
   padding: 12px;
 `;
 
-export default class DrawerMenu extends React.Component<Props, {}> {
+export default class DrawerMenu extends React.PureComponent<Props, {}> {
   render () {
     const {title, show, currentMenuKey, menuItems, onClose, onMenuClick} = this.props;
     return (
