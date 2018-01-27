@@ -6,7 +6,7 @@ import { ApiCallType } from '../framework/types';
 describe('BaseStore test', () => {
 
   beforeEach(() => {
-    console.log = jest.fn(() => void 0);
+    // console.log = jest.fn(() => void 0);
     console.error = jest.fn(() => void 0);
     console.warn = jest.fn(() => void 0);
     console.info  = jest.fn(() => void 0);
@@ -60,6 +60,9 @@ describe('BaseStore test', () => {
       @apiTypeDef static readonly API_WILL_SUCCESS: ApiCallType;
       @apiTypeDef static readonly API_WILL_FAILURE: ApiCallType;
 
+      @apiTypeDef static readonly API_PRIORITY_TEST: ApiCallType;
+      @apiTypeDef readonly API_PRIORITY_TEST: ApiCallType;
+
       constructor (public key: string) {
         super(key);
       }
@@ -73,6 +76,11 @@ describe('BaseStore test', () => {
       failureApi (params: any) {
         return Promise.reject('failure');
       }
+
+      @apiCallWith('API_PRIORITY_TEST')
+      priorityTestApi (params: any) {
+        return Promise.resolve(params);
+      }
     }
 
     const apiCallWithTest = new ApiCallWithTest('test');
@@ -81,18 +89,21 @@ describe('BaseStore test', () => {
       const params = {id: 123};
 
       const {timeout, res} = yield race({
-        timeout: call(delay, 100),
+        timeout: call(delay, 10000),
         res: all([
           take(ApiCallWithTest.API_WILL_SUCCESS.SUCCESS),
           take(ApiCallWithTest.API_WILL_FAILURE.FAILURE),
+          take(apiCallWithTest.API_PRIORITY_TEST.SUCCESS),
           put({type: ApiCallWithTest.API_WILL_SUCCESS.REQUEST, payload: params}),
           put({type: ApiCallWithTest.API_WILL_FAILURE.REQUEST, payload: params}),
+          put({type: apiCallWithTest.API_PRIORITY_TEST.REQUEST, payload: params})
         ])
       });
 
       expect(timeout).toBe(undefined);
       expect(res[0].payload).toEqual(params);
       expect(res[1].payload).toBe('failure');
+      expect(res[2].payload).toEqual(params);
 
     }).done;
   });
