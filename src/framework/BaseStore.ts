@@ -9,7 +9,6 @@ type BaseStoreStaticConfig = {
 };
 
 type BaseStoreConfig = {
-  key?: string;
   sagaRunner?: SagaRunner;
 };
 
@@ -33,7 +32,7 @@ export default class BaseStore {
     BaseStore.initialized = false;
   }
 
-  constructor (public keyOrConfig?: string | BaseStoreConfig, baseStoreConfig?: BaseStoreConfig) {
+  constructor (public key: string, baseStoreConfig?: BaseStoreConfig) {
     if (!BaseStore.initialized) {
       BaseStore.init();
     }
@@ -41,18 +40,11 @@ export default class BaseStore {
     if (!baseStoreConfig) {
       baseStoreConfig = {};
     }
-    if (typeof keyOrConfig === 'string') {
-      baseStoreConfig.key = keyOrConfig;
-    } else if (keyOrConfig) {
-      baseStoreConfig = keyOrConfig;
-    }
 
     this.http = BaseStore.http;
     this.sagaRunner = baseStoreConfig.sagaRunner || BaseStore.sagaRunner;
 
-    if (baseStoreConfig.key) {
-      this.sagaRunner.registerStore(baseStoreConfig.key, this);
-    }
+    this.sagaRunner.registerStore(key, this);
 
     this.dispatch = this.dispatch.bind(this);
     this.runSaga = this.runSaga.bind(this);

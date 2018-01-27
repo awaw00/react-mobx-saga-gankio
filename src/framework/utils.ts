@@ -1,19 +1,19 @@
 import { ApiCallType } from './types';
 
-export function getApiCallType (baseType: string, namespace?: string): ApiCallType {
+export function getApiCallType (baseType: string, namespace?: string, key?: string): ApiCallType {
   if (namespace) {
-    return {
-      PRE_REQUEST: `${namespace}/${baseType}#PRE_REQUEST`,
-      REQUEST: `${namespace}/${baseType}#REQUEST`,
-      SUCCESS: `${namespace}/${baseType}#SUCCESS`,
-      FAILURE: `${namespace}/${baseType}#FAILURE`,
-    };
+    namespace += (key ? `[${key}]` : '') + '/';
+  } else {
+    namespace = '';
   }
+
+  const slicer = '|';
+
   return {
-    PRE_REQUEST: baseType + '#PRE_REQUEST',
-    REQUEST: baseType + '#REQUEST',
-    SUCCESS: baseType + '#SUCCESS',
-    FAILURE: baseType + '#FAILURE'
+    PRE_REQUEST: `${namespace}${baseType}${slicer}PRE_REQUEST`,
+    REQUEST: `${namespace}${baseType}${slicer}REQUEST`,
+    SUCCESS: `${namespace}${baseType}${slicer}SUCCESS`,
+    FAILURE: `${namespace}${baseType}${slicer}FAILURE`,
   };
 }
 
