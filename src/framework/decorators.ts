@@ -25,7 +25,11 @@ export function typeDef (target: any, key: string, descriptor?: any): any {
     // instance type
     return {
       get () {
-        return `${namespace}[${this.key}]/${key}`;
+        const cacheKey = '__' + key;
+        if (!this[cacheKey]) {
+          this[cacheKey] = `${namespace}[${this.key}]/${key}`;
+        }
+        return this[cacheKey];
       }
     };
   }
@@ -41,7 +45,11 @@ export function apiTypeDef (target: any, key: string): any {
     // instance api type
     return {
       get () {
-        return getApiCallType(key, namespace, this.key);
+        const cacheKey = '__' + key;
+        if (!this[cacheKey]) {
+          this[cacheKey] = getApiCallType(key, namespace, this.key);
+        }
+        return this[cacheKey];
       }
     };
   }
