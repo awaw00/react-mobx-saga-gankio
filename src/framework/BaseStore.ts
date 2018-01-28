@@ -1,3 +1,4 @@
+import invariant from './invariant';
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { ActionWithPayload, ApiCallType, ApiCallWithConfig } from './types';
 import { put, takeLatest, call } from 'redux-saga/effects';
@@ -36,6 +37,11 @@ export default class BaseStore {
     if (!BaseStore.initialized) {
       BaseStore.init();
     }
+
+    invariant(
+      key !== '',
+      'store.key couldn\'t be an empty string'
+    );
 
     if (!baseStoreConfig) {
       baseStoreConfig = {};
@@ -87,22 +93,24 @@ export default class BaseStore {
     const {apiCallTypeName} = apiCallWithConfig;
 
     // try get instance type first
-    let apiCallType = this[apiCallTypeName] || this.constructor[apiCallTypeName];
+    let apiCallType: ApiCallType = this[apiCallTypeName] || this.constructor[apiCallTypeName];
 
-    if (isApiType(apiCallType)) {
-      this.runSaga(function * () {
-        yield takeLatest(apiCallType.REQUEST, function * ({payload}: ActionWithPayload) {
-          try {
-            const data = yield call(func, payload);
-            yield put({type: apiCallType.SUCCESS, payload: data});
-          } catch (err) {
-            yield put({type: apiCallType.FAILURE, payload: err});
-            console.error(err);
-          }
-        });
+    invariant(
+      isApiType(apiCallType),
+      'invalid apiCallType: %s',
+      JSON.stringify(apiCallType)
+    );
+
+    this.runSaga(function * () {
+      yield takeLatest(apiCallType.REQUEST, function * ({payload}: ActionWithPayload) {
+        try {
+          const data = yield call(func, payload);
+          yield put({type: apiCallType.SUCCESS, payload: data});
+        } catch (err) {
+          yield put({type: apiCallType.FAILURE, payload: err});
+          console.error(err);
+        }
       });
-    } else {
-      throw new Error('apiCallType is not valid');
-    }
+    });
   }
 }
