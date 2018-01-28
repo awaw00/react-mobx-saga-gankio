@@ -16,9 +16,9 @@ export function bind (target: any, key: string, descriptor: any) {
 }
 
 export function typeDef (target: any, key: string, descriptor?: any): any {
-  const namespace = target.name || target.constructor.name;
   if (typeof target === 'function') {
     // static type
+    const namespace = target.name;
     target[key] = `${namespace}/${key}`;
     return target;
   } else {
@@ -27,6 +27,7 @@ export function typeDef (target: any, key: string, descriptor?: any): any {
       get () {
         const cacheKey = '__' + key;
         if (!this[cacheKey]) {
+          const namespace = this.constructor.name;
           this[cacheKey] = `${namespace}[${this.key}]/${key}`;
         }
         return this[cacheKey];
@@ -36,9 +37,9 @@ export function typeDef (target: any, key: string, descriptor?: any): any {
 }
 
 export function apiTypeDef (target: any, key: string): any {
-  const namespace = target.name || target.constructor.name;
   if (typeof target === 'function') {
     // static api type
+    const namespace = target.name;
     target[key] = getApiCallType(key, namespace);
     return target;
   } else {
@@ -47,6 +48,7 @@ export function apiTypeDef (target: any, key: string): any {
       get () {
         const cacheKey = '__' + key;
         if (!this[cacheKey]) {
+          const namespace = this.constructor.name;
           this[cacheKey] = getApiCallType(key, namespace, this.key);
         }
         return this[cacheKey];
